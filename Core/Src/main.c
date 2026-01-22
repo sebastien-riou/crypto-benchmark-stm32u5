@@ -107,6 +107,36 @@ void com_tx(const void *const buf, unsigned int size){
 #include <stdio.h>
 
 void lean_benchmark();
+
+typedef uint32_t cmox_init_retval_t;
+#define CMOX_INIT_SUCCESS       ((cmox_init_retval_t)0x00000000) /*!< Init operation successfully performed */
+
+#include "stm32u5xx_hal.h"
+/**
+  * @brief          CMOX library low level initialization
+  * @param          pArg User defined parameter that is transmitted from initialize service
+  * @retval         Initialization status: @ref CMOX_INIT_SUCCESS / @ref CMOX_INIT_FAIL
+  */
+cmox_init_retval_t cmox_ll_init(void *pArg)
+{
+  (void)pArg;
+  /* Ensure CRC is enabled for cryptographic processing */
+  __HAL_RCC_CRC_RELEASE_RESET();
+  __HAL_RCC_CRC_CLK_ENABLE();
+  return CMOX_INIT_SUCCESS;
+}
+
+/**
+  * @brief          CMOX library low level de-initialization
+  * @param          pArg User defined parameter that is transmitted from finalize service
+  * @retval         De-initialization status: @ref CMOX_INIT_SUCCESS / @ref CMOX_INIT_FAIL
+  */
+cmox_init_retval_t cmox_ll_deInit(void *pArg)
+{
+  (void)pArg;
+  /* Do not turn off CRC to avoid side effect on other SW parts using it */
+  return CMOX_INIT_SUCCESS;
+}
 /* USER CODE END 0 */
 
 /**
@@ -167,7 +197,7 @@ int main(void)
 
   /* USER CODE BEGIN BSP */
   /* -- Sample board code to send message over COM1 port ---- */
-  printf("U5A5-crypto-benchmark\r\n");
+  printf("crypto-benchmark-stm32u5\r\n");
   const uint32_t sys_clk = HAL_RCC_GetSysClockFreq();
   printf("SYS clock frequency = %lu MHz\r\n",sys_clk/1000000);
   char frequency_mhz[10] = {0};
@@ -182,6 +212,7 @@ int main(void)
 	  "DCACHE", "disabled"
 	};
   lean_benchmark(sizeof(hw_info)/sizeof(char*),hw_info,0);
+
   BSP_LED_On(LED_BLUE);
   BSP_LED_On(LED_RED);
   /* USER CODE END BSP */
