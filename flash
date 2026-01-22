@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -ex
+
+index=${1:-0}
+name=${2:-build/crypto-benchmark-stm32u5.elf}
+addr=${3:-0x08000000}
+#power cycle to make any latent change to option bytes visible
+STM32_Programmer_CLI --connect port=swd index=${index} -halt --power off index=${index} --power on index=${index}
+STM32_Programmer_CLI --connect port=swd index=${index} -halt --optionbytes displ -ob SWAP_BANK=0 --erase all --download ${name} ${addr} --start
