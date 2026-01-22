@@ -44,6 +44,8 @@
 COM_InitTypeDef BspCOMInit;
 __IO uint32_t BspButtonState = BUTTON_RELEASED;
 
+DCACHE_HandleTypeDef hdcache1;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -53,6 +55,7 @@ void SystemClock_Config(void);
 static void SystemPower_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ICACHE_Init(void);
+static void MX_DCACHE1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -107,6 +110,8 @@ void com_tx(const void *const buf, unsigned int size){
 #include <stdio.h>
 
 void lean_benchmark();
+int icache_enabled=0;
+int dcache_enabled=0;
 
 typedef uint32_t cmox_init_retval_t;
 #define CMOX_INIT_SUCCESS       ((cmox_init_retval_t)0x00000000) /*!< Init operation successfully performed */
@@ -172,6 +177,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ICACHE_Init();
+  MX_DCACHE1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -205,11 +211,13 @@ int main(void)
   /* -- Sample board code to switch on leds ---- */
   BSP_LED_On(LED_GREEN);
   EnableTiming();
+  const char* icache_str = icache_enabled ? "enabled" : "disabled";
+  const char* dcache_str = dcache_enabled ? "enabled" : "disabled";
 	const char*hw_info[] = {
 	  "hw_platform", "STM32U5A5",
 	  "frequency_mhz", frequency_mhz,
-	  "ICACHE", "enabled",
-	  "DCACHE", "disabled"
+	  "ICACHE", icache_str,
+	  "DCACHE", dcache_str
 	};
   lean_benchmark(sizeof(hw_info)/sizeof(char*),hw_info,0);
 
@@ -309,6 +317,33 @@ static void SystemPower_Config(void)
 }
 
 /**
+  * @brief DCACHE1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_DCACHE1_Init(void)
+{
+
+  /* USER CODE BEGIN DCACHE1_Init 0 */
+
+  /* USER CODE END DCACHE1_Init 0 */
+
+  /* USER CODE BEGIN DCACHE1_Init 1 */
+
+  /* USER CODE END DCACHE1_Init 1 */
+  hdcache1.Instance = DCACHE1;
+  hdcache1.Init.ReadBurstType = DCACHE_READ_BURST_WRAP;
+  if (HAL_DCACHE_Init(&hdcache1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN DCACHE1_Init 2 */
+  dcache_enabled=1;
+  /* USER CODE END DCACHE1_Init 2 */
+
+}
+
+/**
   * @brief ICACHE Initialization Function
   * @param None
   * @retval None
@@ -335,7 +370,7 @@ static void MX_ICACHE_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ICACHE_Init 2 */
-
+  icache_enabled=1;
   /* USER CODE END ICACHE_Init 2 */
 
 }
