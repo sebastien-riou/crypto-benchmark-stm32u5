@@ -155,7 +155,7 @@ LDSCRIPT = STM32U5A5xx_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys -lcrypto-benchmark
-LIBDIR = -L../crypto-benchmark/build/cortex-m33/mldsa/44
+LIBDIR = -L../crypto-benchmark/build/cortex-m33/
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
