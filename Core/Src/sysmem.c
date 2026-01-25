@@ -24,6 +24,9 @@
 #include <errno.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
+bool LBMK_is_within_benchmarked_func();
+extern volatile uint64_t heap_usage;
 
 /**
  * Pointer to the current high watermark of the heap usage
@@ -59,6 +62,10 @@ void *_sbrk(ptrdiff_t incr)
   const uint32_t stack_limit = (uint32_t)&_estack - (uint32_t)&_Min_Stack_Size;
   const uint8_t *max_heap = (uint8_t *)stack_limit;
   uint8_t *prev_heap_end;
+
+  if(LBMK_is_within_benchmarked_func()){
+    heap_usage += incr;
+  }
 
   /* Initialize heap end at first call */
   if (NULL == __sbrk_heap_end)
