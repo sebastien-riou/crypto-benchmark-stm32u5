@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -ex
+
+cd ..
+if [[ ! -z $CRYPTO_BENCHMARK_USE_GIT_SSH ]]; then
+    git clone git@github.com:sebastien-riou/crypto-benchmark.git
+    git clone git@github.com:sebastien-riou/wolfssl.git
+else
+    git clone https://github.com/sebastien-riou/crypto-benchmark.git
+    git clone https://github.com/sebastien-riou/wolfssl.git
+fi
+
+cd wolfssl
+git checkout 81062704
+./build-mldsa-lowram
+cd ..
+
+cd crypto-benchmark
+git checkout 1f381d5e
+./initial-setup 0
+./build-all-targets
+cd ..
+
+cd crypto-benchmark-stm32u5
+make clean all
+./flash
