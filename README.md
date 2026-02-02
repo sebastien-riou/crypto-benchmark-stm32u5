@@ -4,25 +4,27 @@ Integration of crypto-benchmark on NUCLEO-STM32U5 board
 ## Dependencies
 
 ### Cortex-M33 Toolchain
-This projected as been tested with https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/tag/v14.2.1-1.1
+This projected as been tested with https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/tag/v14.2.1-1.1 on Ubuntu 24.04.
 
-### crypto-bemchmark
-A clone of https://github.com/sebastien-riou/crypto-benchmark repository is expected at the same level as the clone of this repository.
-
+### Other repositories
+Install and build them using the initial setup script:
 ````
-cd ..
-git clone https://github.com/sebastien-riou/crypto-benchmark
-cd crypto-benchmark
+export CRYPTO_BENCHMARK_USE_GIT_SSH=1
+./initial-setup
 ````
 
+Note: the definition of `CRYPTO_BENCHMARK_USE_GIT_SSH` is needed only because `crypto-benchmark` repo is currently private. Once it is public, this will not be needed anymore.
 
 ## How to build and run using CLI
-Build using make:
-
+Build benchmark lib, for example:
 ````
 cd ../crypto-benchmark
 ./buildit on/cortex-m33 mldsa 44
 cd ../crypto-benchmark-stm32u5 
+````
+
+Build the firmware using make:
+````
 make clean all
 ````
 
