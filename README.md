@@ -13,7 +13,9 @@ export CRYPTO_BENCHMARK_USE_GIT_SSH=1
 ./initial-setup
 ````
 
-Note: the definition of `CRYPTO_BENCHMARK_USE_GIT_SSH` is needed only because `crypto-benchmark` repo is currently private. Once it is public, this will not be needed anymore.
+Note:
+- the script build libraries also fr risc-v, so it requires a `riscv-none-elf-gcc` in the path. if you do not want that, comment out riscv builds in the build-all-target scripts. 
+- the definition of `CRYPTO_BENCHMARK_USE_GIT_SSH` is needed only because `crypto-benchmark` repo is currently private. Once it is public, this will not be needed anymore.
 
 ## How to build and run using CLI
 Build benchmark lib, for example:
