@@ -17,7 +17,7 @@ git checkout 81062704
 cd ..
 
 cd crypto-benchmark
-git checkout 1f381d5e
+git checkout ffdcf75
 ./initial-setup 0
 ./build-all-targets
 cd ..
