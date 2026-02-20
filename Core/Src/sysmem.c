@@ -26,7 +26,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 bool LBMK_is_within_benchmarked_func();
-extern volatile uint64_t heap_usage;
+static volatile uint64_t heap_usage;
+void LBMK_init_heap_usage(){
+  heap_usage = 0;
+}
+uint64_t LBMK_get_heap_usage(){
+  return heap_usage;
+}
 
 /**
  * Pointer to the current high watermark of the heap usage
