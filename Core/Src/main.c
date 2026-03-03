@@ -108,8 +108,8 @@ void com_tx(const void *const buf, unsigned int size){
 	HAL_UART_Transmit(&hcom_uart[COM1], (const uint8_t*)buf, size, 0xFFFF);
 }
 #include <stdio.h>
-
-void lean_benchmark();
+#include <stdbool.h>
+void lean_benchmark(unsigned int ninfo, const char*info[], bool run_forever);
 int icache_enabled=0;
 int dcache_enabled=0;
 
