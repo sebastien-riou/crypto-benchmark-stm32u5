@@ -9,13 +9,15 @@ This projected as been tested with https://github.com/xpack-dev-tools/arm-none-e
 ### Other repositories
 Install and build them using the initial setup script:
 ````
-export CRYPTO_BENCHMARK_USE_GIT_SSH=1
 ./initial-setup
 ````
 
-Note:
-- the script build libraries also fr risc-v, so it requires a `riscv-none-elf-gcc` in the path. if you do not want that, comment out riscv builds in the build-all-target scripts. 
-- the definition of `CRYPTO_BENCHMARK_USE_GIT_SSH` is needed only because `crypto-benchmark` repo is currently private. Once it is public, this will not be needed anymore.
+----
+**NOTE**
+
+The script build libraries also fr risc-v, so it requires a `riscv-none-elf-gcc` in the path. if you do not want that, comment out riscv builds in the build-all-target scripts. 
+
+----
 
 ## How to build and run using CLI
 Build benchmark lib, for example:
