@@ -2,17 +2,20 @@
 
 set -ex
 
-CRYPTO_BENCHMARK_COMMIT=6eb47c5
-WOLFSSL_COMMIT=8106270
+CRYPTO_BENCHMARK_TAG=v0.0.7
+WOLFSSL_TAG=crypto-benchmark-0.0.7
 
 cd ..
 if [[ ! -z $CRYPTO_BENCHMARK_USE_GIT_SSH ]]; then
-    git clone --depth=1 --revision=$CRYPTO_BENCHMARK_COMMIT git@github.com:sebastien-riou/crypto-benchmark.git
-    git clone --depth=1 --revision=$WOLFSSL_COMMIT git@github.com:sebastien-riou/wolfssl.git
+    CRYPTO_BENCHMARK_URL=git@github.com:sebastien-riou/crypto-benchmark.git
+    WOLFSSL_URL=git@github.com:sebastien-riou/wolfssl.git
 else
-    git clone --depth=1 --revision=$CRYPTO_BENCHMARK_COMMIT https://github.com/sebastien-riou/crypto-benchmark.git
-    git clone --depth=1 --revision=$WOLFSSL_COMMIT https://github.com/sebastien-riou/wolfssl.git
+    CRYPTO_BENCHMARK_URL=https://github.com/sebastien-riou/crypto-benchmark.git
+    WOLFSSL_URL=https://github.com/sebastien-riou/wolfssl.git
 fi
+
+git clone --depth=1 $CRYPTO_BENCHMARK_URL --branch $CRYPTO_BENCHMARK_TAG --single-branch
+git clone --depth=1 $WOLFSSL_URL --branch $WOLFSSL_TAG --single-branch
 
 cd wolfssl
 ./buildit-mldsa-lowram
