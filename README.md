@@ -23,6 +23,7 @@ The script build libraries also fr risc-v, so it requires a `riscv-none-elf-gcc`
 Build benchmark lib, for example:
 ````
 cd ../crypto-benchmark
+python3 link_ext.py --goal=small
 ./buildit on/cortex-m33 mldsa 44
 cd ../crypto-benchmark-stm32u5 
 ````
@@ -49,6 +50,7 @@ If you want to step into crypto-benchmark functions, you need to build it with d
 
 ````
 cd ../crypto-benchmark
+python3 link_ext.py --preset=debug
 ./buildit on/cortex-m33 mldsa 44 OPEN_SOURCE debug
 cd ../crypto-benchmark-stm32u5 
 make clean all
