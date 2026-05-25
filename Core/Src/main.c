@@ -107,8 +107,18 @@ uint32_t LBMK_get_cpu_timestamp(){
 void com_tx(const void *const buf, unsigned int size){
 	HAL_UART_Transmit(&hcom_uart[COM1], (const uint8_t*)buf, size, 0xFFFF);
 }
+void com_rx(void *const buf, unsigned int size){
+	HAL_UART_Receive(&hcom_uart[COM1], (uint8_t*)buf, size, 0xFFFF);
+}
 #include <stdio.h>
 #include <stdbool.h>
+
+int LBMK_putchar(int ch);
+int __io_putchar(int ch){
+	return LBMK_putchar(ch);
+}
+
+void LBMK_init_leancom();
 void lean_benchmark(unsigned int ninfo, const char*info[], bool run_forever);
 int icache_enabled=0;
 int dcache_enabled=0;
@@ -202,7 +212,7 @@ int main(void)
   }
 
   /* USER CODE BEGIN BSP */
-  /* -- Sample board code to send message over COM1 port ---- */
+  LBMK_init_leancom();
   printf("crypto-benchmark-stm32u5\r\n");
   const uint32_t sys_clk = HAL_RCC_GetSysClockFreq();
   printf("SYS clock frequency = %lu MHz\r\n",sys_clk/1000000);

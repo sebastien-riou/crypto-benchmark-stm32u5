@@ -124,7 +124,7 @@ int iar_fputc(int ch);
 /* ARM Compiler 5/6*/
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #elif defined(__GNUC__)
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#define PUTCHAR_PROTOTYPE __attribute__((weak)) int __io_putchar(int ch)
 #endif /* __ICCARM__ */
 
 /**

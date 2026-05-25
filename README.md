@@ -39,10 +39,8 @@ Load using:
 ./flash
 ````
 
-Expected result:
-
-- The Green LED should shine when benchmark starts.
-- All LED should shine when benchmark has completed.
+To launch the benchmark and get results, go to `../crypto-benchmark` and run `./get-results`. 
+Be patient, the benchmark takes about one minute to execute.
 
 ## How to import in STM32CubeIDE
 Import the top folder as "General -> Existing Projects into Workspace".
