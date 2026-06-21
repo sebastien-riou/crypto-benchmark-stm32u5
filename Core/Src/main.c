@@ -212,26 +212,25 @@ int main(void)
   }
 
   /* USER CODE BEGIN BSP */
+  BSP_LED_On(LED_GREEN);
   LBMK_init_leancom();
+  BSP_LED_On(LED_BLUE);
   printf("crypto-benchmark-stm32u5\r\n");
   const uint32_t sys_clk = HAL_RCC_GetSysClockFreq();
   printf("SYS clock frequency = %lu MHz\r\n",sys_clk/1000000);
   char frequency_mhz[10] = {0};
   sprintf(frequency_mhz,"%lu",sys_clk/1000000);
-  /* -- Sample board code to switch on leds ---- */
-  BSP_LED_On(LED_GREEN);
   EnableTiming();
   const char* icache_str = icache_enabled ? "enabled" : "disabled";
   const char* dcache_str = dcache_enabled ? "enabled" : "disabled";
 	const char*hw_info[] = {
-	  "hw_platform", "STM32U5A5",
+	  "hw_platform", "stm32u5",
 	  "frequency_mhz", frequency_mhz,
 	  "ICACHE", icache_str,
 	  "DCACHE", dcache_str
 	};
   lean_benchmark(sizeof(hw_info)/sizeof(char*),hw_info,0);
 
-  BSP_LED_On(LED_BLUE);
   BSP_LED_On(LED_RED);
   /* USER CODE END BSP */
 
