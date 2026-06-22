@@ -118,6 +118,15 @@ int __io_putchar(int ch){
 	return LBMK_putchar(ch);
 }
 
+void LBMK_clear_caches(){
+  printf("clear caches\n");
+	__HAL_FLASH_PREFETCH_BUFFER_DISABLE();
+	HAL_ICACHE_Invalidate();
+	HAL_ICACHE_WaitForInvalidateComplete();
+	HAL_DCACHE_Invalidate(&hdcache1);
+	__HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+}
+
 void LBMK_init_leancom();
 void lean_benchmark(unsigned int ninfo, const char*info[], bool run_forever);
 int icache_enabled=0;
