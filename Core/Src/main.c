@@ -119,8 +119,7 @@ int __io_putchar(int ch){
 }
 
 void LBMK_clear_caches(){
-  printf("clear caches\n");
-	__HAL_FLASH_PREFETCH_BUFFER_DISABLE();
+  __HAL_FLASH_PREFETCH_BUFFER_DISABLE();
 	HAL_ICACHE_Invalidate();
 	HAL_ICACHE_WaitForInvalidateComplete();
 	HAL_DCACHE_Invalidate(&hdcache1);
