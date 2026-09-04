@@ -1,10 +1,18 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 index=${1:-0}
 name=${2:-build/crypto-benchmark-stm32u5.elf}
 addr=${3:-0x08000000}
+
+if [[ ! ${index} =~ ^[0-9]+$ ]]; then
+    echo "$0: probe index must be a number, got '${index}'" >&2
+    echo "usage: $0 [probe_index] [elf_file] [address]" >&2
+    exit 1
+fi
+
+set -x
 #power cycle to make any latent change to option bytes visible
 STM32_Programmer_CLI --connect port=swd index=${index} -halt --power off index=${index} --power on index=${index}
 STM32_Programmer_CLI --connect port=swd index=${index} -halt --optionbytes displ -ob SWAP_BANK=0 --erase all --download ${name} ${addr} --start

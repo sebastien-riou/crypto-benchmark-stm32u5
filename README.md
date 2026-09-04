@@ -45,6 +45,11 @@ Restart the firmware already loaded on the board (reset and run, exits immediate
 ./run
 ````
 
+`./run [probe_index] [soft|hard|power]` selects the reset: `soft` (default) is a system
+reset requested over SWD, `hard` pulses the NRST pin like the board's RESET button and
+recovers a wedged target, `power` power cycles the target through the ST-LINK for a true
+power-on reset. See the comments in the script.
+
 To launch the benchmark and get results, go to `../crypto-benchmark` and run `./get-results`. 
 Be patient, the benchmark takes about one minute to execute.
 

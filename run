@@ -3,21 +3,63 @@
 # Reset the board and exit immediately, leaving it executing its firmware.
 # Nothing stays attached: the application keeps running after this script returns.
 #
-# mode=HOTPLUG connects to the running target without resetting or halting it,
-# so the only thing which disturbs the application is the "-rst" system reset
-# right after. The core comes out of that reset running, and STM32_Programmer_CLI
-# disconnects on exit, which is what "as fast as possible" costs here: one SWD
-# connect plus one reset, no erase, no download, no --start.
+# Usage: ./run [probe_index] [soft|hard|power]
 #
-# Do not use the default NORMAL (or UR) connection mode: those reset the target
-# on connect and leave the core halted, so the firmware would only start again
-# once a further -run/--start command is issued.
+# soft   (default) System reset requested from inside the chip: the debugger writes
+#                  SYSRESETREQ in the Cortex-M33 AIRCR over SWD. No pin moves anywhere.
+#                  Resets the core and the peripherals, leaves the backup domain (RTC,
+#                  backup registers) untouched. Needs a responsive debug port and core.
+# hard             The ST-LINK pulses the target NRST pin: electrically the same event
+#                  as pressing the black RESET button on the Nucleo. It resets whatever
+#                  else sits on that net too (shields, morpho headers), and it works
+#                  when the core is past caring -- hard fault lockup, WFI with debug
+#                  disabled, a debug port which will not answer. The pulse can drop the
+#                  debug connection mid-command, so the tool may report an error even
+#                  though the board did restart correctly: check the firmware rather
+#                  than the exit code.
+# power            Target power cycle through the ST-LINK, i.e. a true power-on reset.
+#                  The only one which also clears the backup domain and makes latent
+#                  option byte changes visible -- same trick as the first line of
+#                  ./flash. Slowest by far, and a second connect follows it to leave the
+#                  core running and to confirm the target came back.
+#
+# mode=HOTPLUG on every connect: it attaches to the running target without resetting or
+# halting it, so the only thing which disturbs the application is the reset we ask for
+# explicitly. Do not use the default NORMAL (or UR) connection mode here: those reset
+# the target on connect and leave the core halted, so the firmware would only start
+# again once a further -run/--start command is issued.
 
 set -e
 
 cd "$(dirname "$0")"
 
 index=${1:-0}
+mode=${2:-soft}
 
-set -x
-STM32_Programmer_CLI --connect port=swd index=${index} mode=HOTPLUG -rst
+if [[ ! ${index} =~ ^[0-9]+$ ]]; then
+    echo "$0: probe index must be a number, got '${index}'" >&2
+    echo "usage: $0 [probe_index] [soft|hard|power]" >&2
+    exit 1
+fi
+
+connect=(--connect port=swd index=${index} mode=HOTPLUG)
+
+case "${mode}" in
+    soft)
+        set -x
+        STM32_Programmer_CLI "${connect[@]}" -rst
+        ;;
+    hard)
+        set -x
+        STM32_Programmer_CLI "${connect[@]}" -hardRst
+        ;;
+    power)
+        set -x
+        STM32_Programmer_CLI "${connect[@]}" --power off index=${index} --power on index=${index}
+        STM32_Programmer_CLI "${connect[@]}" -rst
+        ;;
+    *)
+        echo "usage: $0 [probe_index] [soft|hard|power]" >&2
+        exit 1
+        ;;
+esac
