@@ -39,6 +39,12 @@ Load using:
 ./flash
 ````
 
+Restart the firmware already loaded on the board (reset and run, exits immediately):
+
+````
+./run
+````
+
 To launch the benchmark and get results, go to `../crypto-benchmark` and run `./get-results`. 
 Be patient, the benchmark takes about one minute to execute.
 

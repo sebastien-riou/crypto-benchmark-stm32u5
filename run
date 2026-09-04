@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Reset the board and exit immediately, leaving it executing its firmware.
+# Nothing stays attached: the application keeps running after this script returns.
+#
+# mode=HOTPLUG connects to the running target without resetting or halting it,
+# so the only thing which disturbs the application is the "-rst" system reset
+# right after. The core comes out of that reset running, and STM32_Programmer_CLI
+# disconnects on exit, which is what "as fast as possible" costs here: one SWD
+# connect plus one reset, no erase, no download, no --start.
+#
+# Do not use the default NORMAL (or UR) connection mode: those reset the target
+# on connect and leave the core halted, so the firmware would only start again
+# once a further -run/--start command is issued.
+
+set -e
+
+cd "$(dirname "$0")"
+
+index=${1:-0}
+
+set -x
+STM32_Programmer_CLI --connect port=swd index=${index} mode=HOTPLUG -rst
