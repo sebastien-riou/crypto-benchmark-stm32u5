@@ -50,7 +50,17 @@ reset requested over SWD, `hard` pulses the NRST pin like the board's RESET butt
 recovers a wedged target, `power` power cycles the target through the ST-LINK for a true
 power-on reset. See the comments in the script.
 
-To launch the benchmark and get results, go to `../crypto-benchmark` and run `./get-results`. 
+Print the UART device to connect to (the ST-LINK virtual COM port):
+
+````
+./find-uart
+````
+
+With several boards plugged in, pass the ST-LINK serial number as listed by
+`STM32_Programmer_CLI -l st-link-only`, for example `./find-uart 002E0034`.
+
+To launch the benchmark and get results, go to `../crypto-benchmark` and run
+`./get-results $(cd ../crypto-benchmark-stm32u5 && ./find-uart)`. 
 Be patient, the benchmark takes about one minute to execute.
 
 ## How to import in STM32CubeIDE

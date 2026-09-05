@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Print the /dev path of the board's UART: the virtual COM port of the on-board ST-LINK,
+# which is what Core/Src/main.c talks to and what ../crypto-benchmark/get-results wants.
+#
+# Usage: ./find-uart [stlink_serial]
+#
+# Resolution order:
+#   1. $STM32U5_UART, if set        -- explicit override, printed as is
+#   2. the by-id entry whose name contains the ST-LINK serial given as argument
+#      (or in $STLINK_SN)           -- pick one specific board
+#   3. the single ST-LINK VCOM present
+#
+# The ST-LINK serial numbers are the ones "STM32_Programmer_CLI -l st-link-only" lists,
+# in the same order as the probe index taken by ./flash and ./run, so
+#   ./find-uart <serial>
+# and the index of that same serial in that listing refer to one physical board.
+#
+# A /dev/serial/by-id path is printed rather than /dev/ttyACMn on purpose: that name
+# embeds the probe's USB serial number, so it is stable across reboots and across
+# enumeration order, and it appears and disappears with the board (which is what
+# lean_benchmark.py --device-timeout waits on). Resolve it with "readlink -f" if some
+# tool insists on the short name.
+
+set -u
+
+BYID=/dev/serial/by-id
+PATTERN='usb-STMicroelectronics_*'
+
+if [ -n "${STM32U5_UART:-}" ]; then
+    echo "$STM32U5_UART"
+    exit 0
+fi
+
+sn=${1:-${STLINK_SN:-}}
+if [ -n "$sn" ]; then
+    PATTERN="usb-STMicroelectronics_*${sn}*"
+fi
+
+shopt -s nullglob
+matches=( "$BYID"/$PATTERN )
+shopt -u nullglob
+
+case ${#matches[@]} in
+    1)
+        echo "${matches[0]}"
+        ;;
+    0)
+        echo "find-uart: no ST-LINK VCOM matching '$PATTERN' under $BYID" >&2
+        echo "find-uart: is the board plugged in and powered? serial devices present:" >&2
+        ls -1 "$BYID" 2>/dev/null | sed 's/^/  /' >&2 || echo "  (none)" >&2
+        exit 1
+        ;;
+    *)
+        echo "find-uart: several boards match; pass the ST-LINK serial (or set STLINK_SN," >&2
+        echo "find-uart: or STM32U5_UART) to pick one:" >&2
+        printf '  %s\n' "${matches[@]}" >&2
+        exit 1
+        ;;
+esac
