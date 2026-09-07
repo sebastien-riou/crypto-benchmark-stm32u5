@@ -7,17 +7,13 @@ Integration of crypto-benchmark on NUCLEO-STM32U5 board
 This projected as been tested with https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/tag/v14.2.1-1.1 on Ubuntu 24.04.
 
 ### Other repositories
-Install and build them using the initial setup script:
+This repo is set up as an add-on of [crypto-benchmark](https://github.com/sebastien-riou/crypto-benchmark)'s
+`initial-setup`, which builds `crypto-benchmark`'s own library for `cortex-m33`
+and then this repo's firmware:
 ````
-./initial-setup
+cd ../crypto-benchmark
+./initial-setup --level=custom --addons=crypto-benchmark-stm32u5
 ````
-
-----
-**NOTE**
-
-The script build libraries also fr risc-v, so it requires a `riscv-none-elf-gcc` in the path. if you do not want that, comment out riscv builds in the build-all-target scripts. 
-
-----
 
 ## How to build and run using CLI
 Build benchmark lib, for example:
