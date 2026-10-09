@@ -158,7 +158,8 @@ LDSCRIPT = STM32U5A5xx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys -lcrypto-benchmark
 LIBDIR = -L../crypto-benchmark/build/cortex-m33/
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+# libcrypto-benchmark.a is built with LTO objects, optimize them at link time
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -flto
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).elf.txt $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin

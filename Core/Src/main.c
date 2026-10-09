@@ -132,7 +132,9 @@ int icache_enabled=0;
 int dcache_enabled=0;
 
 typedef uint32_t cmox_init_retval_t;
-#define CMOX_INIT_SUCCESS       ((cmox_init_retval_t)0x00000000) /*!< Init operation successfully performed */
+/* value of CMOX_INIT_SUCCESS in cmox_common.h of the STM32 Cryptographic middleware V5 (X-CUBE-CRYPTOLIB); it was 0 in
+   the packages before V5. The library checks the return value of cmox_ll_init() against it. */
+#define CMOX_INIT_SUCCESS       ((cmox_init_retval_t)0x5ba93f71) /*!< Init operation successfully performed */
 
 #include "stm32u5xx_hal.h"
 /**
