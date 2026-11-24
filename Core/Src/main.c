@@ -100,7 +100,7 @@ void EnableTiming(void){
   *DWT_CONTROL |= 1 ; // enable the counter
 }
 
-uint32_t LBMK_get_cpu_timestamp(){
+uint64_t LBMK_get_cpu_timestamp(){
 	return *DWT_CYCCNT;
 }
 
