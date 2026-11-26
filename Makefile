@@ -62,6 +62,7 @@ Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_uart_ex.c \
 Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_uart.c \
 Core/Src/system_stm32u5xx.c \
 Core/Src/sysmem.c \
+../crypto-benchmark/common/lbmk_heap.c \
 Core/Src/syscalls.c \
 Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_dcache.c
 
@@ -160,6 +161,8 @@ LIBS = -lc -lm -lnosys -lcrypto-benchmark
 LIBDIR = -L../crypto-benchmark/build/cortex-m33/
 # libcrypto-benchmark.a is built with LTO objects, optimize them at link time
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -flto
+# heap use for lean-benchmark (../crypto-benchmark/common/lbmk_heap.c) wraps the allocator
+LDFLAGS += -Wl,--wrap=malloc,--wrap=calloc,--wrap=realloc,--wrap=free
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).elf.txt $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
