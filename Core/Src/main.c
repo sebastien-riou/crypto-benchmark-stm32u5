@@ -239,7 +239,13 @@ int main(void)
 	  "ICACHE", icache_str,
 	  "DCACHE", dcache_str
 	};
+  /* Interrupts masked while the benchmark runs, as on the other boards and in lean-bsp: the HAL's 1 kHz
+     SysTick would otherwise interrupt the timed code and push its frame on the measured stack. com_tx and
+     com_rx poll the UART; their HAL timeouts do not expire meanwhile, the tick being stopped. */
+  const uint32_t primask = __get_PRIMASK();
+  __disable_irq();
   lean_benchmark(sizeof(hw_info)/sizeof(char*),hw_info,0);
+  __set_PRIMASK(primask);
 
   BSP_LED_On(LED_RED);
   /* USER CODE END BSP */
