@@ -131,37 +131,8 @@ void lean_benchmark(unsigned int ninfo, const char*info[], bool run_forever);
 int icache_enabled=0;
 int dcache_enabled=0;
 
-typedef uint32_t cmox_init_retval_t;
-/* value of CMOX_INIT_SUCCESS in cmox_common.h of the STM32 Cryptographic middleware V5 (X-CUBE-CRYPTOLIB); it was 0 in
-   the packages before V5. The library checks the return value of cmox_ll_init() against it. */
-#define CMOX_INIT_SUCCESS       ((cmox_init_retval_t)0x5ba93f71) /*!< Init operation successfully performed */
-
-#include "stm32u5xx_hal.h"
-/**
-  * @brief          CMOX library low level initialization
-  * @param          pArg User defined parameter that is transmitted from initialize service
-  * @retval         Initialization status: @ref CMOX_INIT_SUCCESS / @ref CMOX_INIT_FAIL
-  */
-cmox_init_retval_t cmox_ll_init(void *pArg)
-{
-  (void)pArg;
-  /* Ensure CRC is enabled for cryptographic processing */
-  __HAL_RCC_CRC_RELEASE_RESET();
-  __HAL_RCC_CRC_CLK_ENABLE();
-  return CMOX_INIT_SUCCESS;
-}
-
-/**
-  * @brief          CMOX library low level de-initialization
-  * @param          pArg User defined parameter that is transmitted from finalize service
-  * @retval         De-initialization status: @ref CMOX_INIT_SUCCESS / @ref CMOX_INIT_FAIL
-  */
-cmox_init_retval_t cmox_ll_deInit(void *pArg)
-{
-  (void)pArg;
-  /* Do not turn off CRC to avoid side effect on other SW parts using it */
-  return CMOX_INIT_SUCCESS;
-}
+/* The STM32 Cryptographic library's cmox_ll_init(), which switches on the CRC unit's clock, is crypto-benchmark's
+   (common/stm32pqc_ll.c, built for the U5 family that hardware-platforms/stm32u5.py names). */
 /* USER CODE END 0 */
 
 /**
