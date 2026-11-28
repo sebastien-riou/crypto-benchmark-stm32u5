@@ -1,5 +1,34 @@
 # crypto-benchmark-stm32u5
+
+> [!WARNING]
+> **Deprecated.** This repository is no longer maintained. crypto-benchmark now runs on the NUCLEO-U5A5ZJ-Q board as
+> a [lean-bsp](https://github.com/sebastien-riou/lean-bsp) application:
+> [crypto-benchmark](https://github.com/sebastien-riou/crypto-benchmark)'s board glue built with
+> [lean-bsp-nucleo-u5a5](https://github.com/sebastien-riou/lean-bsp-nucleo-u5a5), a board support package shared by
+> every lean-bsp application. Follow crypto-benchmark's README, section
+> ["Benchmarking on a board"](https://github.com/sebastien-riou/crypto-benchmark#benchmarking-on-a-board).
+>
+> Compared with this project, that build runs the same machine code for every benchmarked function, with the same
+> outputs, stack, heap and footprint; average cycle counts moved by less than 1 %, from where the linker places the
+> code. This repository stays as it was, for reference.
+
 Integration of crypto-benchmark on NUCLEO-STM32U5 board
+
+## Instead: the lean-bsp build
+
+With `lean-bsp`, `lean-bsp-nucleo-u5a5` and [lean-hwbridge](https://github.com/sebastien-riou/lean-hwbridge) set up as
+crypto-benchmark's README describes, from the `crypto-benchmark` directory, for example:
+
+````
+pipenv run python benchmark.py --hw-platform nucleo-u5a5 --lib pqm4 --algo mlkem --pset 768
+````
+
+The results carry the board's name in lean-bsp, `nucleo-u5a5`, where this repository's carried `stm32u5`. Since
+lean-benchmark v0.0.12 the caches are cleared before each timed operation, as this repository's `LBMK_clear_caches`
+meant to but never did (link-time optimisation dropped it), so cycle counts are a little higher than this
+repository's.
+
+The instructions below are this repository's own, kept as they were.
 
 ## Dependencies
 
